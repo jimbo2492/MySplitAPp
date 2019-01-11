@@ -1,21 +1,15 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import AppNavigator from './js/AppNavigator';
+import React, { Component } from 'react';
 
-export default class App extends React.Component {
+export default class App extends Component {
+
+  state = {
+    persons: [],
+    payments: [],
+  };
+
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Split-App</Text>
-      </View>
-    );
+    return <AppNavigator persons={this.state.persons} payments={this.state.payments} />;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
