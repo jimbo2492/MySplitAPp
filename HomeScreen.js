@@ -27,15 +27,18 @@ export default class HomeScreen extends Component {
         isLoading: true,
         fromNewPersonScreen: false,
         newPerson: '',
-        payments: [
+        /*payments: [
             { name: 'Einkauf', value: 50, person: 'Waude' },
             { name: 'Tickets', value: 22, person: 'Luki' },
             { name: 'Eintritt', value: 40, person: 'Laura' },
-        ]
+        ]*/
+        payments: [],
     }
 
     _retrieveData = async () => {
         let persons = [];
+        let payments = [];
+
         let query = await Firebase.db.collection('persons').get();
         query.forEach(person => {
             persons.push({
@@ -45,9 +48,22 @@ export default class HomeScreen extends Component {
                 dif: person.data().dif
             });
         });
-        this.setState({ persons, isLoading: false });
-        console.log({ persons });
+        this.setState({ persons });
+
+        let query_ = await Firebase.db.collection('payments').get();
+        query_.forEach(payment => {
+            payments.push({
+                id: payment.id,
+                title: payment.data().title,
+                person: payment.data().person,
+                value: payment.data().value
+            });
+        });
+        this.setState({ payments });
+        this.setState({ isLoading: false });
+
         this._calculate();
+
     };
 
     _savePersonToDB = async (name, total, dif) => {
@@ -66,7 +82,7 @@ export default class HomeScreen extends Component {
 
     _addPerson = (name) => {
 
-        console.log('los gehts');
+        //console.log('los gehts');
         const total = 0, dif = 0;
 
         let { persons } = this.state;
@@ -86,23 +102,22 @@ export default class HomeScreen extends Component {
 
         for (let i = 0; i < payments.length; i++) {
 
-            total_amount = total_amount + payments[i].value;
+            total_amount = total_amount + parseFloat(payments[i].value);
 
             for (let j = 0; j < persons.length; j++) {
 
                 if (payments[i].person === persons[j].name) {
-                    console.log('im IF');
+                    // console.log('im IF');
 
                     persons[j].total = payments[i].value;
-                    console.log(persons);
+                    // console.log(persons);
                 }
 
                 persons[j].dif = persons[j].total - total_amount / persons.length;
-                this.setState({ persons });
+
             };
         };
-
-
+        this.setState({ persons });
     }
 
     componentDidMount() {
@@ -113,20 +128,17 @@ export default class HomeScreen extends Component {
 
     }
 
-    componentWillMount() {
-
-        console.log('Home willmount');
-    }
 
     componentDidUpdate() {
 
+        console.log('Home die Update');
         const name = this.props.navigation.getParam('newPerson', '');
 
-        console.log('bin hier mit state = ', this.state.newPerson, 'und name = ', name)
+        //console.log('bin hier mit state = ', this.state.newPerson, 'und name = ', name)
         if (this.state.newPerson != name) {
             this.setState({ fromNewPersonScreen: false });
             this.setState({ newPerson: name });
-            console.log('addPerson', name);
+            //console.log('addPerson', name);
             this._addPerson(name);
             this._retrieveData();
 
@@ -135,6 +147,11 @@ export default class HomeScreen extends Component {
     }
 
     render() {
+
+        console.log('Rendern');
+        console.log(this.state.persons);
+
+        const persons = this.state.persons;
 
         return (
             <View style={styles.container}>
@@ -152,9 +169,13 @@ export default class HomeScreen extends Component {
                     data={this.state.persons}
 
                     keyExtractor={item => item.name}
-                    renderItem={({ item }) => (
+
+                    renderItem={({ item, index }) => (
                         <Text>{item.name}, {item.total}, {item.dif}</Text>
+
                     )}
+
+                    extraData={this.state}
                 />
 
             </View>
