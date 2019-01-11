@@ -10,12 +10,26 @@ import { Icon } from 'expo';
 import HomeScreen from './Screens/HomeScreen';
 import PaymentsScreen from './Screens/PaymentsScreen';
 import NewPersonScreen from './Screens/NewPersonScreen';
-
+import NewPaymentScreen from './Screens/NewPaymentScreen';
 
 const HomeStack = createStackNavigator({
 
     HomeScreen,
     NewPersonScreen
+
+}, {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: 'aliceblue'
+            }
+        }
+
+    })
+
+const PaymentStack = createStackNavigator({
+
+    PaymentsScreen,
+    NewPaymentScreen
 
 }, {
         defaultNavigationOptions: {
@@ -38,7 +52,7 @@ const TabNavigator = createBottomTabNavigator({
 
     },
     payments: {
-        screen: PaymentsScreen,
+        screen: PaymentStack,
         navigationOptions: {
             title: 'Zahlungen',
             tabBarIcon: ({ tintColor }) => (
