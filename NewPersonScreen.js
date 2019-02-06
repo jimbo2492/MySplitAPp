@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, Button, Modal, View, TextInput } from 'react-native';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 
-//import Firebase from '../../js/Firebase';
-
 
 export default class NewPersonScreen extends Component {
 
@@ -20,14 +18,6 @@ export default class NewPersonScreen extends Component {
         this.props.navigation.navigate('HomeScreen', { newPerson: name, });
     }
 
-
-
-    componentDidMount() {
-
-        //Firebase.init();
-        console.log('neuPerson didmount')
-        // this._retrieveData();
-    }
 
     render() {
 
