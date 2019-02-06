@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {
-    createAppContainer,
-    createBottomTabNavigator,
-    createStackNavigator
-} from 'react-navigation';
-
+import { createAppContainer, createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import { Icon } from 'expo';
+
+//Import eingener Dateien
 import HomeScreen from './Screens/HomeScreen';
 import PaymentsScreen from './Screens/PaymentsScreen';
 import NewPersonScreen from './Screens/NewPersonScreen';
 import NewPaymentScreen from './Screens/NewPaymentScreen';
 
+
+//HomeStack -> Übersichtsseite und Seite zum Hinzufügen von Personen
 const HomeStack = createStackNavigator({
 
     HomeScreen,
@@ -26,6 +25,7 @@ const HomeStack = createStackNavigator({
 
     })
 
+//PaymentStack -> Übersichtsseite der Zahlungen und Hinzufügen von Zahlungen
 const PaymentStack = createStackNavigator({
 
     PaymentsScreen,
@@ -40,6 +40,7 @@ const PaymentStack = createStackNavigator({
 
     })
 
+//TabNavigator enthält die zwei definierten Stacks
 const TabNavigator = createBottomTabNavigator({
     Home: {
         screen: HomeStack,
