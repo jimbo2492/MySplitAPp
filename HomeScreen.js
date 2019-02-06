@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { ActivityIndicator, Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 
-
+//Import eingener Dateien
 import Firebase from '../../js/Firebase';
 
+
+//Eigene Komponente StyledButton, die einen Button enthält
 function StyledButton(props) {
     if (props.visible) {
         return (
@@ -18,8 +20,7 @@ function StyledButton(props) {
     }
 }
 
-
-
+//Klasse HomeScreen, enthält die meiste Logik
 export default class HomeScreen extends Component {
 
     state = {
@@ -28,16 +29,12 @@ export default class HomeScreen extends Component {
         isLoading: true,
         fromNewPersonScreen: false,
         newPerson: '',
-        /*payments: [
-            { name: 'Einkauf', value: 50, person: 'Waude' },
-            { name: 'Tickets', value: 22, person: 'Luki' },
-            { name: 'Eintritt', value: 40, person: 'Laura' },
-        ]*/
         payments: [],
         show_differences: false,
         calc_text: ''
     }
 
+    //Eigene Funktion zum Laden der Daten aus der Cloud via Firebase
     _retrieveData = async () => {
         let persons = [];
         let payments = [];
@@ -64,28 +61,25 @@ export default class HomeScreen extends Component {
         });
         this.setState({ payments });
         this.setState({ isLoading: false });
-
         this._calculate();
 
     };
 
+    //Eigene Funktion zum Speichern einer neuen Person in der Cloud
     _savePersonToDB = async (name, total, dif) => {
-        //console.log('los gehts');
         docRef = await Firebase.db.collection('persons').add({ name, total, dif })
-        //console.log('durch');
-        //persons[persons.length - 1].id = docRef.id;
         this._retrieveData();
     }
 
-
-    _removePersonFromoDB(id) {
+    //Eigene Funktion zum Löschen einer Person - nicht final implementiert
+    /*_removePersonFromoDB(id) {
         Firebase.db.collection('persons').doc(id).delete();
-    }
+    }*/
 
 
+    //Eigene Funktion, die eine neue Person anlegt
     _addPerson = (name) => {
 
-        //console.log('los gehts');
         const total = 0, dif = 0;
 
         let { persons } = this.state;
@@ -97,6 +91,7 @@ export default class HomeScreen extends Component {
 
     }
 
+    //Eigene Funktion, welche die Soll und Haben der einzelnen Personen berechnet
     _calculate() {
 
         const payments = this.state.payments;
@@ -113,10 +108,7 @@ export default class HomeScreen extends Component {
             for (let j = 0; j < persons.length; j++) {
 
                 if (payments[i].person === persons[j].name) {
-                    // console.log('im IF');
-
                     persons[j].total = parseFloat(persons[j].total) + parseFloat(payments[i].value);
-                    // console.log(persons);
                 }
 
                 buf_dif = persons[j].total - total_amount / persons.length;
@@ -128,6 +120,7 @@ export default class HomeScreen extends Component {
         this.setState({ persons });
     }
 
+    //Eigene Funktion zum finalen Abrechnen -> Wer soll wem wieviel zahlen?
     _calc_differences() {
 
         const persons_to_calc = this.state.persons;
@@ -164,9 +157,6 @@ export default class HomeScreen extends Component {
                 amount = max_dif;
             }
 
-            console.log(index_max, ' ', max_dif);
-            console.log(index_min, ' ', min_dif);
-
             if (max_dif != 0 && min_dif != 0) {
                 newLine = newLine + '\n\n' + persons_to_calc[index_min].name + ' bezahlt ' + Math.abs(amount) + '€ an ' + persons_to_calc[index_max].name
             }
@@ -190,37 +180,26 @@ export default class HomeScreen extends Component {
 
     }
 
+    //Wird die Komponente erstellt, Firebase initialisieren und Daten aus der Cloud holen
     componentDidMount() {
-
-        //console.log('Home didmount');
         Firebase.init();
         this._retrieveData();
-
     }
 
-
+    //Wird die Komponente neu geladen, ebenfalls die Daten laden
     componentDidUpdate() {
-
-        // console.log('Home die Update');
         const name = this.props.navigation.getParam('newPerson', '');
 
-        //console.log('bin hier mit state = ', this.state.newPerson, 'und name = ', name)
         if (this.state.newPerson != name) {
             this.setState({ fromNewPersonScreen: false });
             this.setState({ newPerson: name });
-            //console.log('addPerson', name);
             this._addPerson(name);
             this._retrieveData();
-
         }
-
     }
 
+    //Render -> Anzeige auf dem Screen
     render() {
-
-        //console.log('Rendern');
-        //console.log(this.state.persons);
-
         const persons = this.state.persons;
 
         if (this.state.isLoading)
@@ -295,6 +274,7 @@ export default class HomeScreen extends Component {
     }
 }
 
+//Styles
 const styles = StyleSheet.create({
     container: {
         flex: 1,
