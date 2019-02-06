@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, Button, Modal, View, TextInput } from 'react-native';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 
-//import Firebase from '../../js/Firebase';
-
 
 export default class NewPaymentScreen extends Component {
 
