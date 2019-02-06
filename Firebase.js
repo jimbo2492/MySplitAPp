@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 
-
+//Config aus Firebase
 const config = {
     apiKey: "AIzaSyAfnNMkA2C9keVtVbl1LJmcIsq56l7wAYY",
     authDomain: "mysplitapp-e3e18.firebaseapp.com",
@@ -11,7 +11,7 @@ const config = {
     messagingSenderId: "1066382754182"
 };
 
-
+//Initialisierung von Firebase
 export default class Firebase {
     static db;
 
@@ -22,6 +22,3 @@ export default class Firebase {
         Firebase.db.settings(settings);
     }
 }
-
-//FIrebase.init()
-//Firebase.db....
