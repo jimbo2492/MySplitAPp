@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, FlatList, TextInput } from 'react-native';
 import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 
+//Import eingener Dateien
 import Firebase from '../../js/Firebase';
 
 
@@ -19,7 +20,6 @@ function StyledButton(props) {
 }
 
 export default class SettingsScreen extends Component {
-
 
     state = {
         index: 0,
@@ -64,17 +64,11 @@ export default class SettingsScreen extends Component {
     };
 
     _savePaymentToDB = async (title, person, value) => {
-        //console.log('los gehts');
         docRef = await Firebase.db.collection('payments').add({ title, person, value })
-        //console.log('durch');
-        //persons[persons.length - 1].id = docRef.id;
         this._retrieveData();
     }
 
     _addPayment = (title, person, value) => {
-
-        //console.log('los gehts');
-
         let { payments } = this.state;
 
         if ((title) && (person) && (value)) {
@@ -82,15 +76,11 @@ export default class SettingsScreen extends Component {
             this._savePaymentToDB(title, person, value);
         }
         this.setState({ index: payments.length - 1, payments: payments });
-        //console.log('neues payment: ' + this.state.payments)
-
     }
 
 
 
     componentDidMount() {
-
-        console.log('Payment didmount');
         this._retrieveData();
     }
 
@@ -100,13 +90,11 @@ export default class SettingsScreen extends Component {
         const person = this.props.navigation.getParam('person', '');
         const value = this.props.navigation.getParam('value', '');
 
-        //console.log('bin hier mit state = ', this.state.newPerson, 'und name = ', name)
         if ((this.state.newPaymentTitle != title) && (this.state.newPaymentPerson != person) && (this.state.newPaymentValue != value)) {
             this.setState({ fromNewPaymentScreen: false });
             this.setState({ newPaymentTitle: title });
             this.setState({ newPaymentPerson: person });
             this.setState({ newPaymentValue: value });
-            //console.log('addPerson', name);
             this._addPayment(title, person, value);
             this._retrieveData();
 
@@ -129,7 +117,9 @@ export default class SettingsScreen extends Component {
 
                     keyExtractor={item => item.title}
                     renderItem={({ item }) => (
-                        <Text>{item.title}, {item.value}, {item.person}</Text>
+                        <View>
+                            <Text>{item.title}, {item.value}, {item.person}</Text>
+                        </View>
                     )}
                 />
 
@@ -147,7 +137,7 @@ const styles = StyleSheet.create({
     },
     newButton: {
         position: 'absolute',
-        left: 10,
-        top: 40,
+        right: 20,
+        bottom: 20,
     },
 });
